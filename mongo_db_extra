@@ -1,0 +1,40 @@
+MongoDB Extra Queries
+
+Total Records count
+db.emp.find().countDocuments(); // since count is deprecated we will use countDocuments()
+
+db.emp.countDocuments({}); // we need to pass object with 2 paremeter if have other wise only {}.
+
+IN and AND clause (here IN clause is performed on array)
+db.emp.find( {$and :[{"rights" : {$in : ["contributor"]}}], {"name": "jyoti"} });
+
+Delete Spacific records
+db.emp.find({"name" : "sandy"}); 
+
+Order By 
+db.emp.find().sort({name : 1})  // here 1 means accending and -1 means decending
+
+update 
+db.resource_rack.updateOne({_id : ObjectId("606963ab6b4a8b8567937388")}, { $set : {"rack_type_id" : 3} })
+
+get only one record
+
+db.resource_rack.find({rack_name_id : 1} , {rack_name_id : 1})
+
+here, first object is what to search and second object what field you want if we pass 1 will get only that field or if we pass 0 then all fields will be returned except that field in this case "rack_name_id"
+
+Join with one table
+
+db.resource_rack.aggregate(
+	[
+		{ 
+			$lookup : { 
+				from : "rack_name" , 
+				localField : "rack_name_id", 
+				foreignField : "rack_name_id", 
+				as : "rack_name" 
+				} 
+		} 
+	] 
+).pretty();
+

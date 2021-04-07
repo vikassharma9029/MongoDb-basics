@@ -1,0 +1,67 @@
+Mango DB commands
+---------------
+1. service mangodb start  |  2. service mangodb status |  3. service mangodb stop
+to work mongodb with shell or terminal ("mongo")
+
+Create User 
+db.createUser({user:"root", pwd:"root121", roles:[{role: "root", db: "admin"}]});
+
+connect with username and password : mongo -u "root" -p "root121" --authenticationDatabase "admin"
+Show dbs => show show databases
+use db_name => used switch db or create db if not exists
+db => db is an object of current database selected db. use db object to perform any operation on selected database.
+
+Insertion in mongoDB
+db.collection_name.insert({"name" : "vikas"}); it will insert single record here if we do not pass _id then it will take it by default
+db.collection_name.insertMany({"name" : "vikas"}, {"name" : "aakash"}); it will use to insert multiple records
+
+Updation in mongoDB
+db.collection_name.update({"name" : "vikas"}, {$set : ("name" : "Aakash"}}); => by default it will update 1 records 
+db.collection_name.update({"name" : "vikas"}, {$set : ("name" : "Aakash"}}, {"multi" : true}); => we need to pass multi true if want to update multiple records.
+
+Select Data in mongoDB
+db.collection_name.find() => used to search data just like (select *)
+db.collection_name.find({"name" : "Vikas"})  => Select with where.
+db.collection_name.find({"name" : /Vikas/}) => like clause
+db.dropDatabase() => to drop database
+db.createCollection(name, options) => use to create collections options is optional
+db.company.find({$and : [{"name" : "vikas"}, {"age" : "28"}]}).pretty(); => AND and OR Clause in mongodb 
+
+grater then, less then, not equal, equal, all complaxe clause in mongo db
+db.collection_name.find({"age" : {$gt : " 10 "}}) : here gt means grater then
+db.collection_name.find({"age" : {$lt : " 10 "}}) : here lt means less then
+db.collection_name.find({"age" : {$gte : " 10 "}}) : here gte means grater then equals to
+db.collection_name.find({"age" : {$lte : " 10 "}}) : here lt means less then equal to
+db.collection_name.find({"age" : {$in : ["10", "28"]}}) : $in means IN clause like mysql
+IN and AND clause in mongoDB
+db.emp.find( {$and :[{"rights" : {$in : ["contributor"]}}], {"name": "jyoti"} }).count();
+
+
+
+--------------------->
+Remove Collection
+db.collection_name.drop();
+--------------------->
+db.paper_master.count();
+--------------------->
+db.paper_master.distinct("paper_name");
+--------------------->
+db.contacts.insert({
+ "_id":db.contacts.count()+1,
+ "name":"Vikas",
+ "emails":[
+    "vikas@test.com",
+    "vikas@test.com"
+ ],
+ "phone":"555111322",
+ "status":"Active"
+});
+--------------------->
+db.paper_master.find({"_id":3},{"paper_section.section_name":1,"_id":0}).limit(3).pretty();
+--------------------->
+db.paper_master.find(
+    {"paper_section.section_name": "Section A"}, 
+    {_id: 0, paper_section: {$elemMatch: {section_name: "Section A"}}});
+--------------------->
+db.paper_master.aggregate({$project:{section_count:{$size:"$paper_section"}}}).pretty();
+--------------------->
